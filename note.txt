@@ -1,0 +1,20 @@
+ Customer slot selection
+ Booking system
+ Booking confirmation
+ Mock Outlook integration
+ Salesforce case update
+ AI clarification workflow
+ Human Review
+ Exception handling
+ Rescheduling
+ Cancellation
+ Training completion
+ Customer feedback
+ Notifications
+ Trainer calendar UI
+ Dashboard improvements
+ Conversation/timeline
+ AI confidence & decision logging
+ End-to-end testing
+ Demo scenarios
+  Final polish

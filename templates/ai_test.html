@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SmartTrain AI</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 15px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .field {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .label {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .value {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .missing {
+            margin-top: 20px;
+            background: #fff7ed;
+            border-left: 4px solid #f97316;
+            padding: 15px;
+        }
+
+        .customer-response {
+            margin-top: 20px;
+            padding: 16px;
+            background: #eff6f3;
+            border-left: 4px solid #27836b;
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>SmartTrain AI Request Parser</h1>
+
+    <p>
+        Enter a customer's training request and SmartTrain
+        will extract the important information.
+    </p>
+
+
+    <div class="box">
+
+        <form method="POST">
+
+            <textarea
+                name="message"
+                placeholder="Example: Hi, we need virtual Unity training for 6 employees next Wednesday."
+                required
+            >{{ message }}</textarea>
+
+            <br>
+
+            <button type="submit">
+                Analyse Request
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% if result %}
+
+    <div class="box">
+
+        <h2>AI Extraction</h2>
+
+        <div class="result">
+
+            <div class="field">
+
+                <div class="label">
+                    Training
+                </div>
+
+                <div class="value">
+                    {{ result.training_type or "Not detected" }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Delivery
+                </div>
+
+                <div class="value">
+                    {{ result.delivery_method or "Not detected" }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Participants
+                </div>
+
+                <div class="value">
+                    {{ result.participants or "Not detected" }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Preferred Date
+                </div>
+
+                <div class="value">
+                    {{ result.preferred_date or "Not detected" }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% if result.missing_fields %}
+
+        <div class="missing">
+
+            <strong>Missing information</strong>
+
+            <ul>
+
+                {% for field in result.missing_fields %}
+
+                <li>{{ field }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        {% else %}
+
+        <div class="missing">
+
+            <strong>✓ Request is complete</strong>
+
+            <p>
+                SmartTrain has enough information to continue
+                to the scheduling stage.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+        <div class="customer-response">
+            <strong>Suggested customer response</strong>
+            <p>{{ result.customer_response }}</p>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SmartTrain - Human Review</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f5f7fb;
+
+            color: #1f2937;
+        }
+
+
+        .layout {
+
+            display: flex;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+
+            width: 230px;
+
+            background: #172554;
+
+            color: white;
+
+            padding: 25px 15px;
+
+            position: fixed;
+
+            left: 0;
+
+            top: 0;
+
+            bottom: 0;
+        }
+
+
+        .logo {
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            margin-bottom: 35px;
+
+            padding-left: 12px;
+        }
+
+
+        .menu-item {
+
+            display: block;
+
+            padding: 14px 12px;
+
+            margin-bottom: 5px;
+
+            border-radius: 7px;
+
+            color: white;
+
+            text-decoration: none;
+        }
+
+
+        .menu-item:hover {
+
+            background: rgba(255,255,255,0.1);
+        }
+
+
+        .active {
+
+            background: rgba(255,255,255,0.15);
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+
+            margin-left: 230px;
+
+            width: calc(100% - 230px);
+
+            padding: 40px;
+        }
+
+
+        .header {
+
+            margin-bottom: 30px;
+        }
+
+
+        .title {
+
+            margin: 0;
+
+            font-size: 32px;
+        }
+
+
+        .subtitle {
+
+            margin-top: 8px;
+
+            color: #6b7280;
+        }
+
+
+        /* =========================
+           REVIEW CARD
+        ========================= */
+
+        .review-card {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.06);
+        }
+
+
+        .case-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .case-title {
+
+            font-size: 20px;
+
+            font-weight: bold;
+        }
+
+
+        .case-number {
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+            margin-top: 5px;
+        }
+
+
+        .status {
+
+            background: #fef3c7;
+
+            color: #92400e;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           CASE DETAILS
+        ========================= */
+
+        .details {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .detail {
+
+            background: #f8fafc;
+
+            padding: 14px;
+
+            border-radius: 8px;
+        }
+
+
+        .label {
+
+            color: #6b7280;
+
+            font-size: 12px;
+
+            margin-bottom: 6px;
+        }
+
+
+        .value {
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           REVIEW REASON
+        ========================= */
+
+        .reason {
+
+            background: #fff7ed;
+
+            border-left: 4px solid #f97316;
+
+            padding: 15px;
+
+            border-radius: 6px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .reason-title {
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+
+            color: #9a3412;
+        }
+
+
+        .reason-text {
+
+            color: #7c2d12;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .actions {
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .button {
+
+            display: inline-block;
+
+            padding: 10px 16px;
+
+            border-radius: 7px;
+
+            border: none;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            font-size: 13px;
+
+            cursor: pointer;
+        }
+
+
+        .view-button {
+
+            background: #2563eb;
+
+            color: white;
+        }
+
+
+        .view-button:hover {
+
+            background: #1d4ed8;
+        }
+
+
+        .resolve-button {
+
+            background: #16a34a;
+
+            color: white;
+        }
+
+
+        .resolve-button:hover {
+
+            background: #15803d;
+        }
+
+
+        /* =========================
+           EMPTY
+        ========================= */
+
+        .empty {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 60px 30px;
+
+            text-align: center;
+
+            color: #6b7280;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0,0,0,0.06);
+        }
+
+
+        .empty-title {
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: #374151;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .details {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                width: 190px;
+            }
+
+
+            .main {
+
+                margin-left: 190px;
+
+                width: calc(100% - 190px);
+
+                padding: 25px;
+            }
+
+
+            .case-header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 10px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .details {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================= -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+            SmartTrain
+        </div>
+
+
+        <a
+            href="/"
+            class="menu-item"
+        >
+            Dashboard
+        </a>
+
+
+        <a
+            href="/"
+            class="menu-item"
+        >
+            Training Cases
+        </a>
+
+
+        <a
+            href="#"
+            class="menu-item"
+        >
+            Trainers
+        </a>
+
+
+        <a
+            href="/calendar"
+            class="menu-item"
+        >
+            Calendar
+        </a>
+
+
+        <a
+            href="/human-review"
+            class="menu-item active"
+        >
+            Human Review
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <main class="main">
+
+
+        <div class="header">
+
+            <h1 class="title">
+                Human Review
+            </h1>
+
+            <div class="subtitle">
+                Cases requiring trainer or administrator intervention
+            </div>
+
+        </div>
+
+
+
+        {% if cases %}
+
+
+            {% for case in cases %}
+
+
+                <div class="review-card">
+
+
+                    <!-- HEADER -->
+
+                    <div class="case-header">
+
+
+                        <div>
+
+                            <div class="case-title">
+
+                                {{ case["customer_name"] }}
+
+                            </div>
+
+
+                            <div class="case-number">
+
+                                Case #{{ case["id"] }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="status">
+
+                            Human Review
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- DETAILS -->
+
+                    <div class="details">
+
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Training
+                            </div>
+
+                            <div class="value">
+
+                                {{ case["training_type"] or "Not provided" }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Delivery
+                            </div>
+
+                            <div class="value">
+
+                                {{ case["delivery_method"] or "Not provided" }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Participants
+                            </div>
+
+                            <div class="value">
+
+                                {{ case["participants"] or "Not provided" }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Trainer
+                            </div>
+
+                            <div class="value">
+
+                                {{ case["assigned_trainer"] or "Not assigned" }}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- REVIEW REASON -->
+
+                    <div class="reason">
+
+                        <div class="reason-title">
+
+                            Why Human Review?
+
+                        </div>
+
+
+                        <div class="reason-text">
+
+                            {{ case["review_reason"] or
+                               "Manual review requested." }}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="actions">
+
+
+                        <a
+                            href="{{ url_for(
+                                'case_detail',
+                                case_id=case['id']
+                            ) }}"
+                            class="button view-button"
+                        >
+                            View Case
+                        </a>
+
+
+                        <form
+                            method="POST"
+                            action="{{ url_for(
+                                'resolve_review',
+                                case_id=case['id']
+                            ) }}"
+                        >
+
+                            <button
+                                type="submit"
+                                class="button resolve-button"
+                            >
+                                Resolve Review
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="empty">
+
+                <div class="empty-title">
+
+                    No Cases Require Human Review
+
+                </div>
+
+
+                <div>
+
+                    SmartTrain currently has no cases waiting for manual intervention.
+
+                </div>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

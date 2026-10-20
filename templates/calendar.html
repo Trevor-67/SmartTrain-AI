@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Calendar | SmartTrain</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202938;
+        }
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 6%;
+        }
+        header h1 { margin: 0 0 6px; }
+        header p { margin: 0; color: #dbeafe; }
+        main {
+            max-width: 1250px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .toolbar {
+            display: flex;
+            align-items: end;
+            flex-wrap: wrap;
+            gap: 14px;
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+        }
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+        input, button, .link {
+            padding: 11px 14px;
+            border-radius: 7px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .link {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #172554;
+            text-decoration: none;
+        }
+        .trainer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 18px;
+        }
+        .trainer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+        }
+        .trainer-card h2 { margin-top: 0; }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 12px 0 20px;
+        }
+        .tag {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .event, .slot {
+            padding: 11px;
+            border-radius: 7px;
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .event {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+        }
+        .slot {
+            background: #f1f5f9;
+            border-left: 4px solid #64748b;
+        }
+        .empty { color: #64748b; font-size: 14px; }
+        h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .section { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SmartTrain — Trainer Calendar</h1>
+        <p>Simulated availability and training bookings</p>
+    </header>
+
+    <main>
+        <div class="toolbar">
+            <form method="GET" action="{{ url_for('calendar') }}">
+                <label for="date">Choose a date</label>
+                <input
+                    id="date"
+                    name="date"
+                    type="date"
+                    value="{{ selected_date }}"
+                    required
+                >
+                <button type="submit">View Calendar</button>
+            </form>
+
+            <a class="link" href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a class="link" href="{{ url_for('create_case') }}">New Training Case</a>
+            <a class="link" href="{{ url_for('human_review') }}">Human Review</a>
+        </div>
+
+        <h2>Trainer availability — {{ selected_date }}</h2>
+
+        <div class="trainer-grid">
+            {% for trainer in trainers_calendar %}
+                <section class="trainer-card">
+                    <h2>{{ trainer.name }}</h2>
+
+                    <strong>Training skills</strong>
+                    <div class="skills">
+                        {% for skill in trainer.skills %}
+                            <span class="tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="section">
+                        <h3>Booked Sessions</h3>
+
+                        {% if trainer.events %}
+                            {% for event in trainer.events %}
+                                <div class="event">
+                                    <strong>
+                                        {{ event.start_time }}–{{ event.end_time }}
+                                    </strong><br>
+                                    {{ event.subject }}<br>
+                                    Customer: {{ event.customer_name }}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="empty">No booked sessions for this date.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="section">
+                        <h3>Available Slots</h3>
+
+                        {% if trainer.available_slots %}
+                            {% for slot in trainer.available_slots %}
+                                <div class="slot">
+                                    {{ slot.start }}–{{ slot.end }}
+                                    <span class="empty">Available</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="empty">No available slots for this date.</p>
+                        {% endif %}
+                    </div>
+                </section>
+            {% endfor %}
+        </div>
+
+        <p class="empty">
+            Prototype note: availability is simulated and is not connected
+            to live Microsoft Outlook calendars.
+        </p>
+    </main>
+</body>
+</html>

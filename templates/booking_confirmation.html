@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Training Scheduled
+    </title>
+
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f6f8;
+
+            margin: 0;
+
+            padding: 40px;
+
+        }
+
+
+        .container {
+
+            max-width: 850px;
+
+            margin: auto;
+
+        }
+
+
+        .card {
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.06);
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .success {
+
+            background: #ecfdf5;
+
+            border-left:
+                5px solid #10b981;
+
+            padding: 20px;
+
+            border-radius: 8px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .success h1 {
+
+            color: #047857;
+
+            margin-top: 0;
+
+        }
+
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+
+        }
+
+
+        .field {
+
+            background: #f9fafb;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+        }
+
+
+        .label {
+
+            font-size: 13px;
+
+            color: #6b7280;
+
+        }
+
+
+        .value {
+
+            font-weight: bold;
+
+            margin-top: 5px;
+
+        }
+
+
+        .integration {
+
+            padding: 15px;
+
+            background: #eff6ff;
+
+            border-left:
+                4px solid #2563eb;
+
+            margin-top: 15px;
+
+            border-radius: 5px;
+
+        }
+
+
+        .button {
+
+            display: inline-block;
+
+            background: #172554;
+
+            color: white;
+
+            padding: 12px 18px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            margin-top: 20px;
+
+        }
+
+
+        .button:hover {
+
+            background: #1e3a8a;
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 20px;
+
+            }
+
+
+            .grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="card">
+
+
+        <!-- SUCCESS -->
+
+        <div class="success">
+
+            <h1>
+                ✓ Training Scheduled
+            </h1>
+
+
+            <p>
+
+                SmartTrain successfully
+                scheduled the training session.
+
+            </p>
+
+        </div>
+
+
+        <!-- BOOKING DETAILS -->
+
+        <h2>
+            Booking Details
+        </h2>
+
+
+        <div class="grid">
+
+
+            <div class="field">
+
+                <div class="label">
+                    Customer
+                </div>
+
+                <div class="value">
+                    {{ case.customer_name }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Training
+                </div>
+
+                <div class="value">
+                    {{ case.training_type }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Delivery
+                </div>
+
+                <div class="value">
+                    {{ case.delivery_method }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Participants
+                </div>
+
+                <div class="value">
+                    {{ case.participants }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Trainer
+                </div>
+
+                <div class="value">
+                    {{ booking.trainer_name }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Date
+                </div>
+
+                <div class="value">
+                    {{ booking.training_date }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Time
+                </div>
+
+                <div class="value">
+
+                    {{ booking.start_time }}
+
+                    -
+
+                    {{ booking.end_time }}
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Booking Status
+                </div>
+
+                <div class="value">
+                    {{ booking.status }}
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <div class="label">
+                    Salesforce Case
+                </div>
+
+                <div class="value">
+
+                    #{{ case.id }}
+
+                    — {{ case.status }}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- OUTLOOK -->
+
+        {% if outlook_event %}
+
+            <div class="integration">
+
+                <strong>
+                    📅 Outlook Calendar
+                </strong>
+
+
+                <p>
+
+                    Mock Outlook event created:
+
+                </p>
+
+
+                <strong>
+                    {{ outlook_event.subject }}
+                </strong>
+
+
+                <p>
+
+                    {{ outlook_event.training_date }}
+
+                    |
+
+                    {{ outlook_event.start_time }}
+
+                    -
+
+                    {{ outlook_event.end_time }}
+
+                </p>
+
+
+                <p>
+
+                    Trainer:
+                    {{ outlook_event.trainer_name }}
+
+                </p>
+
+
+                <p>
+
+                    Status:
+                    {{ outlook_event.status }}
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- SALESFORCE -->
+
+        <div class="integration">
+
+            <strong>
+                Salesforce
+            </strong>
+
+
+            <p>
+
+                Case
+
+                <strong>
+                    #{{ case.id }}
+                </strong>
+
+                has been updated to
+
+                <strong>
+                    {{ case.status }}
+                </strong>.
+
+            </p>
+
+        </div>
+
+
+        <!-- NOTIFICATION -->
+
+        {% if notification %}
+
+            <div class="integration">
+
+                <strong>
+                    🔔 Customer Notification
+                </strong>
+
+
+                <p>
+
+                    {{ notification.message }}
+
+                </p>
+
+
+                <p>
+
+                    Channel:
+                    {{ notification.channel }}
+
+                </p>
+
+
+                <p>
+
+                    Status:
+                    {{ notification.status }}
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ACTIONS -->
+
+        <a
+            href="/"
+            class="button"
+        >
+            ← Back to Dashboard
+        </a>
+
+
+        <a
+            href="{{ url_for('case_detail', case_id=case.id) }}"
+            class="button"
+            style="
+                background:#2563eb;
+                margin-left:10px;
+            "
+        >
+            View Case Timeline
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

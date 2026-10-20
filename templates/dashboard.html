@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTrain Dashboard</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202938;
+        }
+        header {
+            background: #172554;
+            color: white;
+            padding: 24px 6%;
+        }
+        header h1 { margin: 0 0 7px; }
+        header p { margin: 0; color: #dbeafe; }
+        main {
+            max-width: 1400px;
+            margin: 28px auto;
+            padding: 0 20px;
+        }
+        .nav, .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .button, button {
+            display: inline-block;
+            border: 0;
+            border-radius: 7px;
+            padding: 11px 15px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+        }
+        .secondary {
+            background: #e2e8f0;
+            color: #172554;
+        }
+        .danger {
+            background: #b91c1c;
+            color: white;
+        }
+        .warning {
+            background: #b45309;
+            color: white;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat, .panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+        }
+        .stat p {
+            color: #64748b;
+            margin: 0 0 10px;
+        }
+        .stat strong {
+            font-size: 30px;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+        .table-wrap { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th { color: #475569; }
+        .status {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 20px;
+            background: #e2e8f0;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .scheduled { background: #dcfce7; color: #166534; }
+        .review { background: #fee2e2; color: #991b1b; }
+        .awaiting { background: #fef3c7; color: #92400e; }
+        .completed { background: #dbeafe; color: #1d4ed8; }
+        .item {
+            padding: 13px 0;
+            border-bottom: 1px solid #e2e8f0;
+            line-height: 1.5;
+        }
+        .item:last-child { border-bottom: none; }
+        .muted { color: #64748b; font-size: 13px; }
+        .demo-note {
+            margin-bottom: 22px;
+            padding: 14px;
+            border-left: 4px solid #2563eb;
+            background: #eff6ff;
+            border-radius: 6px;
+            line-height: 1.5;
+        }
+        @media (max-width: 850px) {
+            .layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SmartTrain Dashboard</h1>
+        <p>AI-assisted training assignment and scheduling prototype</p>
+    </header>
+
+    <main>
+        <div class="nav">
+            <a class="button" href="{{ url_for('create_case') }}">
+                + Create Training Case
+            </a>
+            <a class="button secondary" href="{{ url_for('calendar') }}">
+                Trainer Calendar
+            </a>
+            <a class="button secondary" href="{{ url_for('human_review') }}">
+                Human Review Queue
+            </a>
+            <a class="button secondary" href="{{ url_for('ai_test') }}">
+                AI Test
+            </a>
+        </div>
+
+        <div class="demo-note">
+            <strong>Demo environment:</strong>
+            The sample cases use synthetic data. Trainer availability and
+            calendar events are simulated; this prototype does not connect
+            to live Salesforce or Microsoft Outlook.
+        </div>
+
+        <section class="stats">
+            <div class="stat">
+                <p>Total Cases</p>
+                <strong>{{ total_cases }}</strong>
+            </div>
+
+            <div class="stat">
+                <p>Scheduled</p>
+                <strong>{{ scheduled }}</strong>
+            </div>
+
+            <div class="stat">
+                <p>Human Review</p>
+                <strong>{{ human_review }}</strong>
+            </div>
+
+            <div class="stat">
+                <p>Awaiting Customer</p>
+                <strong>{{ awaiting_customer }}</strong>
+            </div>
+
+            <div class="stat">
+                <p>Completed</p>
+                <strong>{{ completed }}</strong>
+            </div>
+        </section>
+
+        <section class="panel" style="margin-bottom: 22px;">
+            <h2>Demo Controls</h2>
+            <p class="muted">
+                Reset clears all prototype cases and associated records.
+                Only use these controls in your local demo environment.
+            </p>
+
+            <div class="actions">
+                <form method="POST"
+                      action="{{ url_for('reset_demo') }}"
+                      onsubmit="return confirm('Delete all local demo cases, bookings, notifications and timelines?');">
+                    <button class="danger" type="submit">
+                        Reset Demo
+                    </button>
+                </form>
+
+                <form method="POST"
+                      action="{{ url_for('seed_demo_cases') }}"
+                      onsubmit="return confirm('Load seven synthetic demo cases?');">
+                    <button class="warning" type="submit">
+                        Load 7 Demo Cases
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <div class="layout">
+            <section class="panel">
+                <h2>Training Cases</h2>
+
+                {% if cases %}
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Training</th>
+                                    <th>Trainer</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for case in cases %}
+                                    <tr>
+                                        <td>#{{ case.id }}</td>
+                                        <td>{{ case.customer_name }}</td>
+                                        <td>{{ case.training_type }}</td>
+                                        <td>
+                                            {{ case.assigned_trainer or 'Unassigned' }}
+                                        </td>
+                                        <td>
+                                            {{ case.preferred_date or 'Not set' }}
+                                        </td>
+                                        <td>
+                                            {% if case.status == 'Scheduled' %}
+                                                <span class="status scheduled">
+                                                    Scheduled
+                                                </span>
+                                            {% elif case.status == 'Human Review' %}
+                                                <span class="status review">
+                                                    Human Review
+                                                </span>
+                                            {% elif case.status == 'Awaiting Customer' %}
+                                                <span class="status awaiting">
+                                                    Awaiting Customer
+                                                </span>
+                                            {% elif case.status == 'Completed' %}
+                                                <span class="status completed">
+                                                    Completed
+                                                </span>
+                                            {% else %}
+                                                <span class="status">
+                                                    {{ case.status }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('case_detail', case_id=case.id) }}">
+                                                Open
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p>No training cases yet. Load the seven demo cases or create one manually.</p>
+                {% endif %}
+            </section>
+
+            <aside class="panel">
+                <h2>Upcoming Sessions</h2>
+
+                {% if upcoming %}
+                    {% for event in upcoming %}
+                        <div class="item">
+                            <strong>{{ event.subject }}</strong><br>
+                            {{ event.customer_name }}<br>
+                            <span class="muted">
+                                {{ event.training_date }}
+                                · {{ event.start_time }}–{{ event.end_time }}
+                            </span><br>
+                            <span class="muted">
+                                Trainer: {{ event.trainer_name }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="muted">No upcoming sessions have been booked.</p>
+                {% endif %}
+            </aside>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Training Case | SmartTrain</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202938;
+        }
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 7%;
+        }
+        header h1 { margin: 0 0 6px; }
+        header p { margin: 0; color: #dbeafe; }
+        main {
+            max-width: 760px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 5px 22px rgba(15, 23, 42, 0.07);
+        }
+        label {
+            display: block;
+            margin: 18px 0 7px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            background: white;
+        }
+        .hint {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 12px;
+            border-radius: 5px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        button, .link {
+            border: 0;
+            border-radius: 7px;
+            padding: 12px 17px;
+            text-decoration: none;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+        }
+        .link {
+            background: #e2e8f0;
+            color: #172554;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SmartTrain</h1>
+        <p>Create a training request</p>
+    </header>
+
+    <main>
+        <div class="card">
+            <h2>New Training Case</h2>
+
+            <p class="hint">
+                Demo mode: SmartTrain will automatically select an
+                eligible trainer and an available time slot. Requests
+                that cannot be scheduled will go to Human Review.
+                Use synthetic demonstration data only.
+            </p>
+
+            <form method="POST" action="{{ url_for('create_case') }}">
+                <label for="customer_name">Customer / Business Name</label>
+                <input
+                    id="customer_name"
+                    name="customer_name"
+                    type="text"
+                    placeholder="e.g. Demo Coffee Shop"
+                    required
+                >
+
+                <label for="training_type">Training Type</label>
+                <select id="training_type" name="training_type" required>
+                    <option value="">Select training type</option>
+                    <option value="Unity">Unity</option>
+                    <option value="GAAP">GAAP</option>
+                    <option value="POS">POS</option>
+                    <option value="Other">Other / Specialist</option>
+                </select>
+
+                <label for="delivery_method">Delivery Method</label>
+                <select id="delivery_method" name="delivery_method" required>
+                    <option value="">Select delivery method</option>
+                    <option value="Virtual">Virtual</option>
+                    <option value="Classroom">Classroom</option>
+                    <option value="On-site">On-site</option>
+                </select>
+
+                <label for="participants">Number of Participants</label>
+                <input
+                    id="participants"
+                    name="participants"
+                    type="number"
+                    min="1"
+                    value="5"
+                    required
+                >
+
+                <label for="preferred_date">Requested Training Date</label>
+                <input
+                    id="preferred_date"
+                    name="preferred_date"
+                    type="date"
+                    min="{{ today }}"
+                    value="{{ today }}"
+                    required
+                >
+
+                <div class="actions">
+                    <button type="submit">Create &amp; Auto-Schedule</button>
+                    <a class="link" href="{{ url_for('dashboard') }}">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
